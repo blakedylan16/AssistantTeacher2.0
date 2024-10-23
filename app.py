@@ -50,7 +50,6 @@ if prompt := st.chat_input("how can I help you?"):
 
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-    
 
 
 # sidebar functionality
