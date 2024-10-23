@@ -1,6 +1,10 @@
 import streamlit as st
 
 st.title("Assistant Teacher")
+
+with st.sidebar:
+    st.title("Previous Conversations")
+
 st.write("an app for students to ask their questions on school subjects.")
 
 # Initialize chat history
@@ -19,4 +23,4 @@ if prompt := st.chat_input("how can I help you?"):
         st.markdown(prompt)
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-    
+
