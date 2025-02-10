@@ -28,6 +28,7 @@ class Conversation:
     def __init__(self, label):
         self.label = prompt
         self.messages = []
+        # will add a key to each conversation to find it in the sidebar
         self.key = random.randint(0, 1000000)
     
     def add_message(self, message):
