@@ -1,11 +1,12 @@
 import streamlit as st
+import random
 
 if "convo_list" not in st.session_state:
     st.session_state.convo_list = []
 
 st.title("Assistant Teacher")
 
-st.write("an app for students to ask their questions on school subjects.")
+st.write("an app for students to ask their questions on school subjects")
 
 # function that starts a new chat
 # will change to pin previous conversations to sidebar
@@ -13,24 +14,25 @@ def new_chat():
     st.session_state.messages.clear()
     return
 
-# def new_chat():
-#     # Append the prompt to the conversation list if it's not None
-#     if 'prompt' in st.session_state and st.session_state.prompt:
-#         st.session_state.convo_list.append(st.session_state.prompt)
-#     # Clear messages for a new chat
-#     st.session_state.messages = []
-
 def start_convo():
-    st.session_state.convo_list.append(prompt)
+    new_convo = Conversation(prompt)
+    new_convo.add_message(prompt)
+    st.session_state.convo_list.append(new_convo)
+    return
+
+def update_convo(new_convo):
+    st.session_state.messages = new_convo
     return
 
 class Conversation:
     def __init__(self, label):
         self.label = prompt
         self.messages = []
+        self.key = random.randint(0, 1000000)
     
     def add_message(self, message):
-        self.messages.append(message)
+        self.messages.append({"role": "user", "content": message})
+        return
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -50,7 +52,8 @@ if prompt := st.chat_input("how can I help you?"):
 
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-
+    st.session_state.convo_list[-1].add_message(prompt)
+    # will fix to find prompt given a key
 
 # sidebar functionality
 with st.sidebar:
@@ -64,6 +67,6 @@ with st.sidebar:
         st.write("*No Previous Conversations*")
     else:
         for convo in reversed(st.session_state.convo_list):
-            st.write(convo)
+            print(st.session_state.messages)
+            st.button(convo.label, on_click=lambda:update_convo(convo.messages))
     
-   
