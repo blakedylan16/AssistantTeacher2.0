@@ -1,5 +1,8 @@
 import streamlit as st
+from transformers import pipeline
 import random
+
+chatbot = pipeline("text-generation", model="gpt2")
 
 if "convo_list" not in st.session_state:
     st.session_state.convo_list = []
@@ -24,6 +27,10 @@ def update_convo(new_convo):
     st.session_state.messages = new_convo
     return
 
+def generate_response(prompt):
+    response = chatbot(prompt, max_length=100)
+    return response[0]['generated_text']
+
 class Conversation:
     def __init__(self, label):
         self.label = prompt
@@ -47,6 +54,20 @@ for message in st.session_state.messages:
 # Accept user input
 if prompt := st.chat_input("how can I help you?"):
     # Display user message in chat message container
+    response = generate_response(prompt)
+    st.write(f"Assistant Teacher: {response}")
+    
+    # Display AI response in chat message container
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    
+    # Add AI response to chat history
+    st.session_state.messages.append({"role": "assistant", "content": response})
+    
+    # Clear input field
+    st.chat_input("").clear()
+    st.text("")  # Add a space to the input field for readability and user experience.
+    
     with st.chat_message("user"):
         st.markdown(prompt)
         if not st.session_state.messages: start_convo()
